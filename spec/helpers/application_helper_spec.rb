@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'valid_signin_signup'
+
 describe ApplicationHelper do
 
   describe "full_title" do

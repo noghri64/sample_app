@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   end
   
   def new
+    redirect_to(root_url) unless !signed_in?
     @user = User.new
   end
   def create
@@ -24,6 +25,7 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
+
   def edit
   end
   
@@ -37,9 +39,11 @@ class UsersController < ApplicationController
   end
   
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User deleted."
-    redirect_to users_url
+    if admin_user != User.find(params[:id])
+      User.find(params[:id]).destroy
+      flash[:success] = "User deleted."
+      redirect_to users_url
+    end
   end
   
     private

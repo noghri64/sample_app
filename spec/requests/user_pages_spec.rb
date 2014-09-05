@@ -45,6 +45,11 @@ describe "User pages" do
           end.to change(User, :count).by(-1)
         end
         it {should_not have_link('delete',href: user_path(admin))}
+        
+        it "should not be able to delete itself through DELETE request to the Users#destroy action" do
+          delete user_path(admin)
+#          expect(response).to redirect_to(root_url)
+        end
       end
     end    
   end
@@ -98,7 +103,9 @@ describe "User pages" do
     it {should have_title(user.name)}
   end
   describe "edit" do
+    
     let(:user) { FactoryGirl.create(:user) }
+    
     before do
       valid_signin user
       visit edit_user_path(user)
@@ -110,12 +117,13 @@ describe "User pages" do
       it { should have_link('Change', href: 'http://gravatar.com/emails') }
     end
 
-
     describe "with invalid information" do
+      
       before { click_button 'Save changes' }
 
       it { should have_content('error') }
     end
+    
     describe "with valid information" do
       let(:new_name)  { "New Name" }
       let(:new_email) { "new@example.com" }
@@ -132,6 +140,17 @@ describe "User pages" do
       it { should have_link('Sign out', href: signout_path) }
       specify { expect(user.reload.name).to  eq new_name }
       specify { expect(user.reload.email).to eq new_email }
+    end
+    describe "forbidden attributes" do
+      let(:params) do
+        { user: { admin: true, password: user.password,
+                  password_confirmation: user.password } }
+      end
+      before do
+        valid_signin user, no_capybara: true
+        patch user_path(user), params
+      end
+      specify { expect(user.reload).not_to be_admin }
     end
   end
 end

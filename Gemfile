@@ -12,6 +12,7 @@ gem 'bootstrap-will_paginate', '0.0.9'
 
 gem 'therubyracer'
 gem 'pg', '0.15.1'
+
 group :development, :test do
   gem 'rspec-rails', '2.13.1'
   gem 'guard-rspec','2.5.0'

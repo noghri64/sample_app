@@ -15,11 +15,29 @@ end
  end
 
   describe "Home page" do
-  before {visit root_path}
+    before {visit root_path}
+    
     let(:page_title) {''}
     let(:heading) {'Home'}
     it {should_not have_title('Home')}
+      
+    describe "for signed in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before do
+        FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
+        FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+        valid_signin user
+        visit root_path
+      end
+
+      it "should render the user's feed" do
+        user.feed.each do |item|
+          expect(page).to have_selector("li##{item.id}", text: item.content)
+        end
+      end
+    end
   end
+  
   describe "Help page" do
     before { visit help_path }
     let(:heading){'Help'}

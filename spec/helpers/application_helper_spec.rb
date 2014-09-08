@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require 'valid_signin_signup'
+#require 'valid_signin_signup'
 
 describe ApplicationHelper do
 

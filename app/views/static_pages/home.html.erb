@@ -1,0 +1,6 @@
+<% provide(:title, 'Sample App') %>
+<% if signed_in? %>
+	<%= render 'shared/signedin_home'%>
+<% else %>
+	<%= render 'shared/notsignedin_home' %>
+<% end %>
